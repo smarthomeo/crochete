@@ -11,10 +11,13 @@ import { Loader2 } from 'lucide-react';
 const categories = [
   { id: 'all', name: 'All Products' },
   { id: 'hats', name: 'Hats' },
+  { id: 'dresses', name: 'Dresses' },
   { id: 'scarves', name: 'Scarves' },
-  { id: 'blankets', name: 'Blankets' },
-  { id: 'toys', name: 'Toys' },
-  { id: 'accessories', name: 'Accessories' }
+  { id: 'tops', name: 'Tops' },
+  { id: 't-shirts', name: 'T-Shirts' },
+  { id: 'cardigans', name: 'Cardigans' },
+  { id: 'sweaters', name: 'Sweaters' },
+  { id: 'bikinis', name: 'Bikinis' }
 ];
 
 const Products = () => {

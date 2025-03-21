@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -239,10 +238,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
           >
             <option value="">Select a category</option>
             <option value="hats">Hats</option>
+            <option value="dresses">Dresses</option>
             <option value="scarves">Scarves</option>
-            <option value="blankets">Blankets</option>
-            <option value="toys">Toys</option>
-            <option value="accessories">Accessories</option>
+            <option value="tops">Tops</option>
+            <option value="t-shirts">T-Shirts</option>
+            <option value="cardigans">Cardigans</option>
+            <option value="sweaters">Sweaters</option>
+            <option value="bikinis">Bikinis</option>
           </select>
         </div>
         
