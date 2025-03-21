@@ -66,7 +66,7 @@ const Footer = () => {
           <motion.div variants={itemVariants} className="space-y-6 md:col-span-1">
             <Link to="/" className="inline-block">
               <h2 className="text-2xl font-serif font-medium tracking-tight text-espresso">
-                Yarn<span className="font-light">Craft</span>
+                Yarn<span className="font-light">Elegance</span>
               </h2>
             </Link>
             <p className="text-sm text-taupe max-w-xs leading-relaxed">
@@ -191,7 +191,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-xs text-taupe flex items-center">
-              &copy; {currentYear} YarnCraft. All rights reserved. Made with <Heart className="h-3 w-3 mx-1 text-clay" /> in KENYA
+              &copy; {currentYear} YarnElegance. All rights reserved. Made with <Heart className="h-3 w-3 mx-1 text-clay" /> in KENYA
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy-policy" className="text-xs text-taupe hover:text-espresso transition-colors duration-300">

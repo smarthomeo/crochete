@@ -58,7 +58,7 @@ const Navbar = () => {
           >
             <Link to="/" className="flex items-center">
               <h1 className="text-2xl font-serif font-medium tracking-tight text-espresso">
-                Yarn<span className="font-light">Craft</span>
+                Yarn<span className="font-light">Elegance</span>
               </h1>
             </Link>
           </motion.div>
