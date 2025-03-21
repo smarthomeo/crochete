@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Mail, MapPin, Phone, Send, Clock, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import emailService from '@/services/emailService';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -33,17 +34,39 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "We've received your message and will get back to you soon.",
+    try {
+      const result = await emailService.sendContactForm({
+        name,
+        email,
+        message
       });
-      setName('');
-      setEmail('');
-      setMessage('');
+      
+      if (result.success) {
+        toast({
+          title: "Message sent!",
+          description: "We've received your message and will get back to you soon.",
+        });
+        // Clear form
+        setName('');
+        setEmail('');
+        setMessage('');
+      } else {
+        toast({
+          title: "Error sending message",
+          description: "There was a problem sending your message. Please try again later.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error sending message",
+        description: "There was a problem sending your message. Please try again later.",
+        variant: "destructive"
+      });
+      console.error('Error sending message:', error);
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (

@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Instagram, Facebook, Twitter, Mail, ArrowRight, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import emailService from '@/services/emailService';
+import { useToast } from '@/hooks/use-toast';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const { toast } = useToast();
   
   const footerVariants = {
     hidden: { opacity: 0 },
@@ -47,6 +52,40 @@ const Footer = () => {
     { name: "FAQs", path: "/faq" }
   ];
   
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    setIsSubscribing(true);
+    
+    try {
+      const result = await emailService.subscribeToNewsletter({ email });
+      
+      if (result.success) {
+        toast({
+          title: "Successfully subscribed!",
+          description: "Thank you for subscribing to our newsletter.",
+        });
+        setEmail('');
+      } else {
+        toast({
+          title: "Subscription failed",
+          description: "There was a problem subscribing to the newsletter. Please try again later.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Subscription failed",
+        description: "There was a problem subscribing to the newsletter. Please try again later.",
+        variant: "destructive"
+      });
+      console.error('Error subscribing to newsletter:', error);
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
   return (
     <footer className="bg-mocha-100 border-t border-sand relative overflow-hidden">
       {/* Decorative elements */}
@@ -150,7 +189,7 @@ const Footer = () => {
             <p className="text-sm text-taupe mb-5 leading-relaxed">
               Subscribe to get updates on new products and special offers.
             </p>
-            <form className="space-y-3">
+            <form className="space-y-3" onSubmit={handleNewsletterSubmit}>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-taupe h-4 w-4" />
                 <input
@@ -158,6 +197,8 @@ const Footer = () => {
                   placeholder="Your email"
                   className="w-full pl-10 pr-4 py-3 border border-sand bg-white rounded-md focus:outline-none focus:ring-1 focus:ring-clay placeholder:text-taupe/60 text-sm"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <motion.button 
@@ -165,21 +206,24 @@ const Footer = () => {
                 className="w-full bg-espresso text-white py-3 px-4 rounded-md hover:bg-clay transition-colors duration-300 text-sm flex items-center justify-center group"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                disabled={isSubscribing}
               >
-                <span>Subscribe</span>
-                <motion.div
-                  initial={{ x: 0 }}
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ 
-                    repeat: Infinity, 
-                    repeatType: "loop", 
-                    duration: 1.5,
-                    repeatDelay: 1
-                  }}
-                  className="ml-2"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </motion.div>
+                <span>{isSubscribing ? 'Subscribing...' : 'Subscribe'}</span>
+                {!isSubscribing && (
+                  <motion.div
+                    initial={{ x: 0 }}
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ 
+                      repeat: Infinity, 
+                      repeatType: "loop", 
+                      duration: 1.5,
+                      repeatDelay: 1
+                    }}
+                    className="ml-2"
+                  >
+                    <ArrowRight className="h-4 w-4" />
+                  </motion.div>
+                )}
               </motion.button>
             </form>
           </motion.div>
