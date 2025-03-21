@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -11,24 +10,48 @@ const categoryInfo = [
   {
     id: 'hats',
     name: 'Hats',
-    imageUrl: 'https://images.unsplash.com/photo-1530735038726-a73fd6e6c31c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    imageUrl: '/images/categories/hats.jpg',
   },
   {
-    id: 'blankets',
-    name: 'Blankets',
-    imageUrl: 'https://images.unsplash.com/photo-1580301762395-20a3d3fe890b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    id: 'dresses',
+    name: 'Dresses',
+    imageUrl: '/images/categories/dress.jpg',
   },
   {
     id: 'scarves',
     name: 'Scarves',
-    imageUrl: 'https://images.unsplash.com/photo-1609803384069-19f3e3a15121?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
+    imageUrl: '/images/categories/scarf.jpg',
   },
   {
-    id: 'toys',
-    name: 'Toys',
-    imageUrl: 'https://images.unsplash.com/photo-1535572290543-960a8046f5af?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60',
-  }
+    id: 'tops',
+    name: 'Tops',
+    imageUrl: '/images/categories/tops.jpg',
+  },
+  {
+    id: 't-shirts',
+    name: 'T-Shirts',
+    imageUrl: '/images/categories/shirts.jpg',
+  },
+  
+  {
+    id: 'cardigans',
+    name: 'Cardigans',
+    imageUrl: '/images/categories/cardigans.jpg',
+
+  },
+  {
+    id: 'sweaters',
+    name: 'Sweaters',
+    imageUrl: '/images/categories/sweaters.jpg',
+  },
+  {
+    id: 'bikinis',
+    name: 'Bikinis',
+    imageUrl: '/images/categories/bikinis.jpg',
+  },
+  
 ];
+
 
 const CategoryList = () => {
   // Fetch all products to calculate category counts
