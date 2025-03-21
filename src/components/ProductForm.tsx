@@ -25,8 +25,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>(product?.gallery || []);
   const [colors, setColors] = useState<string[]>(product?.colors || []);
   const [newColor, setNewColor] = useState('');
+  const [selectedColorForUpload, setSelectedColorForUpload] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [blobUrls, setBlobUrls] = useState<string[]>([]);
+  const [fileColorMap, setFileColorMap] = useState<Map<File, string>>(new Map());
 
   useEffect(() => {
     return () => {
@@ -61,6 +63,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files);
+      
+      // Associate each file with the currently selected color
+      if (selectedColorForUpload) {
+        const newFileColorMap = new Map(fileColorMap);
+        newFiles.forEach(file => {
+          newFileColorMap.set(file, selectedColorForUpload);
+        });
+        setFileColorMap(newFileColorMap);
+      }
+      
       setGalleryFiles(prev => [...prev, ...newFiles]);
       
       try {
@@ -89,9 +101,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
     setGalleryPreviews(updatedPreviews);
 
     if (index < galleryFiles.length) {
+      const fileToRemove = galleryFiles[index];
       const updatedFiles = [...galleryFiles];
       updatedFiles.splice(index, 1);
       setGalleryFiles(updatedFiles);
+      
+      // Remove the file from the color map
+      const newFileColorMap = new Map(fileColorMap);
+      newFileColorMap.delete(fileToRemove);
+      setFileColorMap(newFileColorMap);
     }
   };
 
@@ -123,19 +141,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
 
       let galleryUrls = [...galleryPreviews.filter(url => !url.startsWith('blob:'))];
       
-      const fileToPreviewMap = new Map();
-      galleryFiles.forEach(file => {
-        const blobUrl = blobUrls.find(url => 
-          galleryPreviews.includes(url) && !galleryUrls.includes(url)
-        );
-        if (blobUrl) {
-          fileToPreviewMap.set(file, blobUrl);
-        }
-      });
-      
       if (galleryFiles.length > 0) {
         for (const file of galleryFiles) {
-          const uploadedUrl = await uploadProductImage(file);
+          // Get the color associated with this file, if any
+          const fileColor = fileColorMap.get(file);
+          const uploadedUrl = await uploadProductImage(file, fileColor);
           if (uploadedUrl) {
             galleryUrls.push(uploadedUrl);
           }
@@ -362,23 +372,68 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
           <label className="block text-sm font-medium text-espresso mb-1">
             Gallery Images
           </label>
-          <div className="flex flex-wrap gap-4 mb-4">
-            {galleryPreviews.map((preview, index) => (
-              <div key={index} className="relative w-24 h-24 rounded overflow-hidden bg-gray-100">
-                <img
-                  src={preview}
-                  alt={`Gallery ${index + 1}`}
-                  className="w-full h-full object-contain"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeGalleryImage(index)}
-                  className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
+          
+          {/* Color selection for uploads */}
+          {colors.length > 0 && (
+            <div className="mb-4 p-3 bg-cream rounded-md">
+              <label className="block text-sm font-medium text-espresso mb-1">
+                Color Tag for New Images
+              </label>
+              <div className="flex items-center space-x-2">
+                <select
+                  value={selectedColorForUpload}
+                  onChange={(e) => setSelectedColorForUpload(e.target.value)}
+                  className="border border-sand rounded-md px-2 py-1 text-sm"
                 >
-                  <X className="h-3 w-3 text-taupe" />
-                </button>
+                  <option value="">No specific color</option>
+                  {colors.map((color, index) => (
+                    <option key={index} value={color}>{color}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-taupe">
+                  {selectedColorForUpload 
+                    ? `New images will be tagged as "${selectedColorForUpload}"` 
+                    : "New images won't be tagged with a color"}
+                </p>
               </div>
-            ))}
+              <p className="text-xs text-taupe mt-1">
+                Images with color tags will automatically display when that color is selected.
+              </p>
+            </div>
+          )}
+          
+          <div className="flex flex-wrap gap-4 mb-4">
+            {galleryPreviews.map((preview, index) => {
+              // Determine if this preview is for a file with a color
+              const isNewUpload = index >= galleryPreviews.length - galleryFiles.length;
+              const fileIndex = isNewUpload ? index - (galleryPreviews.length - galleryFiles.length) : -1;
+              const file = fileIndex >= 0 ? galleryFiles[fileIndex] : null;
+              const color = file ? fileColorMap.get(file) : '';
+              
+              return (
+                <div key={index} className="relative">
+                  <div className="w-24 h-24 rounded overflow-hidden bg-gray-100">
+                    <img
+                      src={preview}
+                      alt={`Gallery ${index + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                    {color && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-taupe/80 text-white text-xs py-1 px-2 text-center truncate">
+                        {color}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeGalleryImage(index)}
+                    className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm"
+                  >
+                    <X className="h-3 w-3 text-taupe" />
+                  </button>
+                </div>
+              );
+            })}
             <label className="flex flex-col items-center justify-center w-24 h-24 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
               <Plus className="h-5 w-5 text-taupe mb-1" />
               <span className="text-xs text-taupe">Add Image</span>

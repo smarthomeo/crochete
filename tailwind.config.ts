@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -46,8 +45,9 @@ export default {
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					light: '#DEC4A7',
+					DEFAULT: '#B48A65',
+					dark: '#8B6B4E'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -67,12 +67,24 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Updated color palette with orange theme
-				cream: '#FFF8F0',
-				sand: '#FFEDD8',
-				taupe: '#FFBE99',
-				clay: '#FF8C42',
-				espresso: '#F06317'
+				// Modern Brown Color Palette
+				cream: '#FFFBF7',
+				sand: '#F5EBE0',
+				taupe: '#8B7355',
+				clay: '#6B4423',
+				espresso: '#3C2A21',
+				mocha: {
+					50: '#FAF6F2',
+					100: '#F0E6DD',
+					200: '#E1CFBF',
+					300: '#D2B8A1',
+					400: '#C3A183',
+					500: '#B48A65',
+					600: '#9A7354',
+					700: '#805F46',
+					800: '#664B38',
+					900: '#4C372A'
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

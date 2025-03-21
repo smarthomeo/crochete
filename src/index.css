@@ -7,33 +7,33 @@
 
 @layer base {
   :root {
-    --background: 20 100% 97%;
-    --foreground: 24 70% 20%;
+    --background: 30 30% 98%;
+    --foreground: 25 45% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 24 70% 20%;
+    --card-foreground: 25 45% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 24 70% 20%;
+    --popover-foreground: 25 45% 20%;
 
-    --primary: 24 90% 45%;
-    --primary-foreground: 24 30% 98%;
+    --primary: 25 45% 30%;
+    --primary-foreground: 30 30% 98%;
 
-    --secondary: 30 100% 92%;
-    --secondary-foreground: 24 90% 45%;
+    --secondary: 30 30% 96%;
+    --secondary-foreground: 25 45% 30%;
 
-    --muted: 24 30% 96%;
-    --muted-foreground: 24 30% 40%;
+    --muted: 25 30% 96%;
+    --muted-foreground: 25 30% 40%;
 
-    --accent: 30 100% 92%;
-    --accent-foreground: 24 90% 45%;
+    --accent: 25 40% 50%;
+    --accent-foreground: 30 30% 98%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 80% 90%;
-    --input: 30 80% 90%;
-    --ring: 24 90% 45%;
+    --border: 25 30% 90%;
+    --input: 25 30% 90%;
+    --ring: 25 45% 30%;
 
     --radius: 0.5rem;
   }
@@ -47,16 +47,16 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-white text-mocha-800 font-sans;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif text-mocha-900;
   }
 
   /* Improved focus styles for accessibility */
   :focus-visible {
-    @apply outline-none ring-2 ring-clay ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-mocha-400 ring-offset-2 ring-offset-white;
   }
 }
 
@@ -67,28 +67,28 @@
   }
   
   .section {
-    @apply py-16 md:py-24;
+    @apply py-16 md:py-24 bg-white;
   }
   
   .section-title {
-    @apply text-3xl md:text-4xl font-serif font-medium text-espresso mb-6;
+    @apply text-3xl md:text-4xl font-serif font-medium text-mocha-900 mb-6;
   }
   
   .section-subtitle {
-    @apply text-sm uppercase tracking-widest text-clay mb-2 font-medium;
+    @apply text-sm uppercase tracking-widest text-mocha-600 mb-2 font-medium;
   }
   
   /* Button styles */
   .btn {
-    @apply inline-flex items-center justify-center rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-clay focus:ring-offset-2;
+    @apply inline-flex items-center justify-center rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-mocha-400 focus:ring-offset-2 shadow-sm hover:shadow-md;
   }
   
   .btn-primary {
-    @apply bg-espresso text-white hover:bg-clay px-6 py-3;
+    @apply bg-mocha-800 text-white hover:bg-mocha-700 px-6 py-3;
   }
   
   .btn-secondary {
-    @apply border border-taupe text-espresso hover:bg-sand hover:border-clay px-6 py-3;
+    @apply border border-mocha-300 text-mocha-800 hover:bg-mocha-50 hover:border-mocha-400 px-6 py-3;
   }
   
   .btn-sm {
@@ -97,7 +97,7 @@
   
   /* Card styles */
   .card {
-    @apply bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-mocha-100;
   }
   
   .card-hover {
@@ -123,12 +123,12 @@
   
   /* Glass effect */
   .glass {
-    @apply bg-white/70 backdrop-blur-md;
+    @apply bg-white/80 backdrop-blur-md border border-mocha-100;
   }
   
   /* Text gradient */
   .text-gradient {
-    @apply bg-gradient-to-r from-espresso to-clay bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-mocha-900 to-mocha-700 bg-clip-text text-transparent;
   }
 }
 
@@ -138,9 +138,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-cream;
+  @apply bg-mocha-50;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-taupe/50 rounded-full hover:bg-taupe transition-colors duration-300;
+  @apply bg-mocha-300 rounded-full hover:bg-mocha-400 transition-colors duration-300;
 }

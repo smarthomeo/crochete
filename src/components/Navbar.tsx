@@ -32,12 +32,11 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const navLinks = [
+  const navigation = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
-    { name: "Chat", path: "/chat" },
   ];
 
   return (
@@ -65,7 +64,7 @@ const Navbar = () => {
           </motion.div>
 
           <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link, index) => (
+            {navigation.map((link, index) => (
               <motion.div
                 key={link.path}
                 initial={{ opacity: 0, y: -10 }}
@@ -167,17 +166,17 @@ const Navbar = () => {
               className="md:hidden mt-4 pt-4 pb-4 border-t overflow-hidden"
             >
               <div className="flex flex-col space-y-1">
-                {navLinks.map((link, index) => (
+                {navigation.map((link, index) => (
                   <motion.div
                     key={link.path}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
                     <Link 
                       to={link.path} 
                       className={cn(
-                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md",
+                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md text-right",
                         location.pathname === link.path && "bg-cream text-clay"
                       )}
                     >
@@ -188,14 +187,14 @@ const Navbar = () => {
                 
                 {user && isAdmin && (
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.4 }}
                   >
                     <Link 
                       to="/admin" 
                       className={cn(
-                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md",
+                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md text-right",
                         location.pathname === '/admin' && "bg-cream text-clay"
                       )}
                     >
@@ -206,14 +205,14 @@ const Navbar = () => {
                 
                 {user ? (
                   <motion.div
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: 0.4 }}
                   >
                     <Link 
                       to="/profile" 
                       className={cn(
-                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md",
+                        "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md text-right",
                         location.pathname === '/profile' && "bg-cream text-clay"
                       )}
                     >
@@ -223,14 +222,14 @@ const Navbar = () => {
                 ) : (
                   <>
                     <motion.div
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: 0.4 }}
                     >
                       <Link 
                         to="/login" 
                         className={cn(
-                          "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md",
+                          "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md text-right",
                           location.pathname === '/login' && "bg-cream text-clay"
                         )}
                       >
@@ -238,14 +237,14 @@ const Navbar = () => {
                       </Link>
                     </motion.div>
                     <motion.div
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: 0.5 }}
                     >
                       <Link 
                         to="/signup" 
                         className={cn(
-                          "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md",
+                          "block text-espresso hover:text-clay transition-colors duration-300 font-medium px-4 py-3 rounded-md text-right",
                           location.pathname === '/signup' && "bg-cream text-clay"
                         )}
                       >

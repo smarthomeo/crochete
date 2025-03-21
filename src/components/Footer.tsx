@@ -30,22 +30,25 @@ const Footer = () => {
   
   const shopLinks = [
     { name: "Hats", path: "/products?category=hats" },
+    { name: "Dresses", path: "/products?category=dresses" },
     { name: "Scarves", path: "/products?category=scarves" },
-    { name: "Blankets", path: "/products?category=blankets" },
-    { name: "Toys", path: "/products?category=toys" },
-    { name: "Accessories", path: "/products?category=accessories" }
+    { name: "Tops", path: "/products?category=tops" },
+    { name: "T-shirts", path: "/products?category=t-shirts" },
+    { name: "Cardigans", path: "/products?category=cardigans" },
+    { name: "Sweaters", path: "/products?category=sweaters" },
+    { name: "Bikinis", path: "/products?category=bikinis" }
   ];
   
   const aboutLinks = [
     { name: "Our Story", path: "/about" },
-    { name: "Our Process", path: "/process" },
+    { name: "Our Process", path: "/our-process" },
     { name: "Contact Us", path: "/contact" },
     { name: "Custom Orders", path: "/custom-orders" },
     { name: "FAQs", path: "/faq" }
   ];
   
   return (
-    <footer className="bg-cream border-t border-sand relative overflow-hidden">
+    <footer className="bg-mocha-100 border-t border-sand relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50">
         <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full border border-taupe/20"></div>
@@ -188,7 +191,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-xs text-taupe flex items-center">
-              &copy; {currentYear} YarnCraft. All rights reserved. Made with <Heart className="h-3 w-3 mx-1 text-clay" /> in USA
+              &copy; {currentYear} YarnCraft. All rights reserved. Made with <Heart className="h-3 w-3 mx-1 text-clay" /> in KENYA
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link to="/privacy-policy" className="text-xs text-taupe hover:text-espresso transition-colors duration-300">

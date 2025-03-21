@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Navbar from '@/components/Navbar';
@@ -41,12 +40,34 @@ const ProductDetail = () => {
     select: (data) => data.filter(p => p.id !== id).slice(0, 3),
   });
 
+  // Filter gallery based on selected color
+  const filteredGallery = useMemo(() => {
+    if (!product) return [];
+    
+    const gallery = product.gallery || [product.image_url];
+    
+    if (!selectedColor) return gallery;
+    
+    // Filter images that contain the selected color in the filename (case insensitive)
+    const colorFiltered = gallery.filter(url => 
+      url.toLowerCase().includes(selectedColor.toLowerCase())
+    );
+    
+    // If no images match the color, return all images
+    return colorFiltered.length > 0 ? colorFiltered : gallery;
+  }, [product, selectedColor]);
+
   // Set default selected color if not set yet
   useEffect(() => {
     if (product && product.colors && product.colors.length > 0 && !selectedColor) {
       setSelectedColor(product.colors[0]);
     }
   }, [product, selectedColor]);
+
+  // Reset selected image index when color changes
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [selectedColor]);
 
   // Handlers
   const decreaseQuantity = () => {
@@ -61,9 +82,6 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      // Fixed: Remove the quantity property from the object passed to addItem
-      // The addItem function will set quantity=1 by default (for new items)
-      // or increment quantity (for existing items)
       const itemToAdd = {
         id: product.id,
         name: product.name,
@@ -82,6 +100,11 @@ const ProductDetail = () => {
         description: `${product.name} has been added to your cart.`,
       });
     }
+  };
+
+  const handleColorSelection = (color: string) => {
+    setSelectedColor(color);
+    setSelectedImage(0); // Reset to first image when color changes
   };
 
   if (isLoading) {
@@ -113,8 +136,6 @@ const ProductDetail = () => {
       </div>
     );
   }
-
-  const gallery = product.gallery || [product.image_url];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -151,16 +172,16 @@ const ProductDetail = () => {
               <div className="rounded-lg overflow-hidden bg-white card-shadow">
                 <div className="relative" style={{ maxHeight: '600px' }}>
                   <img
-                    src={gallery[selectedImage]}
-                    alt={product.name}
+                    src={filteredGallery[selectedImage]}
+                    alt={`${product.name} - ${selectedColor}`}
                     className="w-full h-auto object-contain max-h-[600px] mx-auto"
                     style={{ display: 'block' }}
                   />
                 </div>
               </div>
-              {gallery.length > 1 && (
+              {filteredGallery.length > 1 && (
                 <div className="flex space-x-4 overflow-x-auto pb-2">
-                  {gallery.map((image, index) => (
+                  {filteredGallery.map((image, index) => (
                     <button
                       key={index}
                       className={`flex-shrink-0 h-24 w-24 border rounded-md overflow-hidden ${
@@ -199,7 +220,7 @@ const ProductDetail = () => {
                       {product.colors.map(color => (
                         <button
                           key={color}
-                          onClick={() => setSelectedColor(color)}
+                          onClick={() => handleColorSelection(color)}
                           className={`px-3 py-1 border rounded-md ${
                             selectedColor === color
                               ? 'border-clay bg-clay/10 text-espresso'

@@ -67,53 +67,6 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Newsletter Section */}
-        <section className="section bg-sand">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="animate-slideInLeft"
-              >
-                <h2 className="text-sm uppercase tracking-widest text-clay mb-2">
-                  Stay Connected
-                </h2>
-                <h3 className="text-3xl md:text-4xl font-serif font-medium text-espresso mb-4">
-                  Join Our Newsletter
-                </h3>
-                <p className="text-taupe mb-6">
-                  Subscribe to receive updates on new products, special offers, and crochet care tips.
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="animate-slideInRight"
-              >
-                <form className="flex flex-col sm:flex-row gap-4">
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    className="flex-grow px-4 py-3 border border-taupe/30 rounded-md focus:outline-none focus:ring-1 focus:ring-clay"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-espresso text-white rounded-md hover:bg-clay button-transition whitespace-nowrap"
-                  >
-                    Subscribe
-                  </button>
-                </form>
-                <p className="text-xs text-taupe mt-2">
-                  We respect your privacy and will never share your information.
-                </p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
       </main>
       <Footer />
     </div>

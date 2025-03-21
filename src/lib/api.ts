@@ -1,4 +1,3 @@
-
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 
@@ -80,10 +79,14 @@ export async function fetchProductById(id: string): Promise<Product | null> {
   }
 }
 
-export async function uploadProductImage(file: File): Promise<string | null> {
+export async function uploadProductImage(file: File, color?: string): Promise<string | null> {
   try {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const randomPart = Math.random().toString(36).substring(2, 10);
+    const fileName = color 
+      ? `${randomPart}-${color.toLowerCase()}.${fileExt}`
+      : `${randomPart}.${fileExt}`;
+    
     const filePath = `${fileName}`;
     
     const { error: uploadError, data } = await supabase.storage
