@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { useAnalytics } from '@/contexts/AnalyticsContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
@@ -27,12 +27,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
   delay = 0
 }) => {
   const { addItem } = useCart();
+  const { trackEvent, trackAddToCart } = useAnalytics();
   const { toast } = useToast();
   
   // Handle wishlist button click
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation to product detail
     e.stopPropagation(); // Stop event bubbling
+    
+    // Track wishlist add event
+    trackEvent('engagement', 'add_to_wishlist', name, price);
     
     toast({
       title: "Added to Wishlist",
@@ -45,12 +49,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.preventDefault(); // Prevent navigation to product detail
     e.stopPropagation(); // Stop event bubbling
     
-    addItem({
+    const item = {
       id,
       name,
       price,
       image: imageUrl
-    });
+    };
+    
+    // Add item to cart
+    addItem(item);
+    
+    // Track add to cart event
+    trackAddToCart(item);
   };
 
   return (

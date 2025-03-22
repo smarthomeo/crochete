@@ -7,6 +7,7 @@ import { MinusIcon, PlusIcon, ShoppingBag, Heart, Loader2 } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { fetchProductById, fetchProducts, Product } from '@/lib/api';
 import { useCart } from '@/contexts/CartContext';
+import { useAnalytics } from '@/contexts/AnalyticsContext';
 import { useToast } from '@/hooks/use-toast';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
@@ -17,6 +18,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart(); // Changed from addToCart to addItem
   const { toast } = useToast();
+  const { trackEvent, trackAddToCart } = useAnalytics();
   const navigate = useNavigate();
   
   // Fetch product details from Supabase
@@ -64,6 +66,13 @@ const ProductDetail = () => {
     }
   }, [product, selectedColor]);
 
+  // Track product view
+  useEffect(() => {
+    if (product) {
+      trackEvent('ecommerce', 'view_item', product.name, product.price);
+    }
+  }, [product, trackEvent]);
+
   // Reset selected image index when color changes
   useEffect(() => {
     setSelectedImage(0);
@@ -88,12 +97,19 @@ const ProductDetail = () => {
         price: product.price,
         image: product.image_url,
         color: selectedColor,
+        quantity: quantity
       };
       
       // Adding the item multiple times based on quantity
       for (let i = 0; i < quantity; i++) {
         addItem(itemToAdd);
       }
+      
+      // Track add to cart event
+      trackAddToCart({
+        ...itemToAdd,
+        quantity: quantity
+      });
       
       toast({
         title: 'Added to cart',
@@ -102,9 +118,26 @@ const ProductDetail = () => {
     }
   };
 
+  const handleWishlistClick = () => {
+    if (product) {
+      // Track wishlist add event
+      trackEvent('engagement', 'add_to_wishlist', product.name, product.price);
+      
+      toast({
+        title: 'Added to Wishlist',
+        description: `${product.name} has been added to your wishlist.`,
+      });
+    }
+  };
+
   const handleColorSelection = (color: string) => {
     setSelectedColor(color);
     setSelectedImage(0); // Reset to first image when color changes
+    
+    // Track color selection event
+    if (product) {
+      trackEvent('engagement', 'select_color', color, product.price);
+    }
   };
 
   if (isLoading) {
@@ -267,6 +300,7 @@ const ProductDetail = () => {
                   <span>{product.in_stock ? 'Add to Cart' : 'Out of Stock'}</span>
                 </button>
                 <button
+                  onClick={handleWishlistClick}
                   className="px-6 py-3 border border-sand rounded-md hover:bg-sand button-transition flex items-center justify-center space-x-2"
                 >
                   <Heart className="w-5 h-5" />

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -8,15 +7,50 @@ import { Button } from '@/components/ui/button';
 import { ShoppingBag, ArrowLeft, ShoppingCart, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAnalytics } from '@/contexts/AnalyticsContext';
 
 const Cart = () => {
   const { items, itemCount, totalPrice, clearCart } = useCart();
   const { toast } = useToast();
+  const { trackEvent, trackPurchase } = useAnalytics();
 
   const handleCheckout = () => {
+    if (items.length === 0) {
+      toast({
+        title: "Cart is empty",
+        description: "Add some items to your cart before checkout",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Track checkout initiation
+    trackEvent('ecommerce', 'begin_checkout', 'checkout_button', totalPrice);
+    
     toast({
       title: "Checkout initiated",
       description: "This is a demo. In a real app, you would be redirected to payment.",
+    });
+  };
+
+  const handleCompletePurchase = (orderId: string) => {
+    // Track completed purchase
+    trackPurchase(
+      orderId, 
+      totalPrice,
+      items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      }))
+    );
+    
+    // Clear cart and show success message
+    clearCart();
+    toast({
+      title: "Purchase completed",
+      description: "Thank you for your purchase!",
     });
   };
 
