@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { usePostHog } from '@/contexts/PostHogContext';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
@@ -28,6 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { addItem } = useCart();
   const { trackEvent, trackAddToCart } = useAnalytics();
+  const { captureEvent, captureAddToCart } = usePostHog();
   const { toast } = useToast();
   
   // Handle wishlist button click
@@ -35,8 +37,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
     e.preventDefault(); // Prevent navigation to product detail
     e.stopPropagation(); // Stop event bubbling
     
-    // Track wishlist add event
+    // Track wishlist add event with Google Analytics
     trackEvent('engagement', 'add_to_wishlist', name, price);
+    
+    // Track wishlist add event with PostHog
+    captureEvent('add_to_wishlist', {
+      product_id: id,
+      product_name: name,
+      price,
+      category
+    });
     
     toast({
       title: "Added to Wishlist",
@@ -59,8 +69,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     // Add item to cart
     addItem(item);
     
-    // Track add to cart event
+    // Track add to cart event with Google Analytics
     trackAddToCart(item);
+    
+    // Track add to cart event with PostHog
+    captureAddToCart(item);
   };
 
   return (

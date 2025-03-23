@@ -8,6 +8,7 @@ import ProductCard from '@/components/ProductCard';
 import { fetchProductById, fetchProducts, Product } from '@/lib/api';
 import { useCart } from '@/contexts/CartContext';
 import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { usePostHog } from '@/contexts/PostHogContext';
 import { useToast } from '@/hooks/use-toast';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
@@ -16,9 +17,10 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
-  const { addItem } = useCart(); // Changed from addToCart to addItem
+  const { addItem } = useCart();
   const { toast } = useToast();
   const { trackEvent, trackAddToCart } = useAnalytics();
+  const { captureEvent, captureAddToCart } = usePostHog();
   const navigate = useNavigate();
   
   // Fetch product details from Supabase
@@ -69,9 +71,18 @@ const ProductDetail = () => {
   // Track product view
   useEffect(() => {
     if (product) {
+      // Track with Google Analytics
       trackEvent('ecommerce', 'view_item', product.name, product.price);
+      
+      // Track with PostHog
+      captureEvent('product_viewed', {
+        product_id: product.id,
+        product_name: product.name,
+        price: product.price,
+        category: product.category
+      });
     }
-  }, [product, trackEvent]);
+  }, [product, trackEvent, captureEvent]);
 
   // Reset selected image index when color changes
   useEffect(() => {
@@ -105,8 +116,14 @@ const ProductDetail = () => {
         addItem(itemToAdd);
       }
       
-      // Track add to cart event
+      // Track add to cart event with Google Analytics
       trackAddToCart({
+        ...itemToAdd,
+        quantity: quantity
+      });
+      
+      // Track add to cart event with PostHog
+      captureAddToCart({
         ...itemToAdd,
         quantity: quantity
       });
@@ -120,8 +137,16 @@ const ProductDetail = () => {
 
   const handleWishlistClick = () => {
     if (product) {
-      // Track wishlist add event
+      // Track wishlist add event with Google Analytics
       trackEvent('engagement', 'add_to_wishlist', product.name, product.price);
+      
+      // Track wishlist add event with PostHog
+      captureEvent('add_to_wishlist', {
+        product_id: product.id,
+        product_name: product.name,
+        price: product.price,
+        category: product.category
+      });
       
       toast({
         title: 'Added to Wishlist',
@@ -134,9 +159,16 @@ const ProductDetail = () => {
     setSelectedColor(color);
     setSelectedImage(0); // Reset to first image when color changes
     
-    // Track color selection event
+    // Track color selection event with Google Analytics
     if (product) {
       trackEvent('engagement', 'select_color', color, product.price);
+      
+      // Track color selection with PostHog
+      captureEvent('select_color', {
+        product_id: product.id,
+        product_name: product.name,
+        color: color
+      });
     }
   };
 

@@ -8,11 +8,13 @@ import { ShoppingBag, ArrowLeft, ShoppingCart, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAnalytics } from '@/contexts/AnalyticsContext';
+import { usePostHog } from '@/contexts/PostHogContext';
 
 const Cart = () => {
   const { items, itemCount, totalPrice, clearCart } = useCart();
   const { toast } = useToast();
   const { trackEvent, trackPurchase } = useAnalytics();
+  const { captureEvent, capturePurchase } = usePostHog();
 
   const handleCheckout = () => {
     if (items.length === 0) {
@@ -24,8 +26,20 @@ const Cart = () => {
       return;
     }
     
-    // Track checkout initiation
+    // Track checkout initiation with Google Analytics
     trackEvent('ecommerce', 'begin_checkout', 'checkout_button', totalPrice);
+    
+    // Track checkout initiation with PostHog
+    captureEvent('begin_checkout', {
+      value: totalPrice,
+      currency: 'USD',
+      items: items.map(item => ({
+        product_id: item.id,
+        product_name: item.name,
+        price: item.price,
+        quantity: item.quantity || 1
+      }))
+    });
     
     toast({
       title: "Checkout initiated",
@@ -34,7 +48,7 @@ const Cart = () => {
   };
 
   const handleCompletePurchase = (orderId: string) => {
-    // Track completed purchase
+    // Track completed purchase with Google Analytics
     trackPurchase(
       orderId, 
       totalPrice,
@@ -43,6 +57,18 @@ const Cart = () => {
         name: item.name,
         price: item.price,
         quantity: item.quantity
+      }))
+    );
+    
+    // Track completed purchase with PostHog
+    capturePurchase(
+      orderId,
+      totalPrice,
+      items.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity || 1
       }))
     );
     
