@@ -27,22 +27,40 @@ export const PostHogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!isInitialized && POSTHOG_KEY) {
       posthog.init(POSTHOG_KEY, {
         api_host: POSTHOG_HOST || 'https://app.posthog.com',
-        capture_pageview: false, // We'll handle pageviews manually
+        capture_pageview: true, // Enable automatic pageview capture
+        capture_pageleave: true, // Enable page leave events
+        persistence: 'localStorage',
         autocapture: true, // Automatically capture clicks, form submissions, etc.
         loaded: (posthog) => {
           if (process.env.NODE_ENV === 'development') {
-            // Opt out of tracking in development
-            posthog.opt_out_capturing();
+            // Comment this out if you want to test analytics in development
+            // posthog.opt_out_capturing();
           }
         }
       });
+      
+      // Set up page leave events manually
+      window.addEventListener('beforeunload', () => {
+        posthog.capture('$pageleave');
+      });
+      
       setIsInitialized(true);
     }
+    
+    // Cleanup function to handle page leave events
+    return () => {
+      if (isInitialized) {
+        window.removeEventListener('beforeunload', () => {
+          posthog.capture('$pageleave');
+        });
+      }
+    };
   }, [isInitialized]);
 
   // Track page views
   useEffect(() => {
     if (isInitialized) {
+      // PostHog will capture pageviews automatically, but we can add custom properties
       posthog.capture('$pageview', {
         path: location.pathname,
         url: window.location.href,

@@ -12,6 +12,22 @@ PostHog is an open-source product analytics platform that helps you understand h
 - Heatmaps to visualize user engagement
 - Integrated funnels and retention analysis
 
+## Implementation Details
+
+PostHog has been implemented in two ways for maximum compatibility:
+
+1. **Direct Script Integration**: The PostHog tracking script is added directly to the `<head>` of your HTML, ensuring proper initialization and page leave event tracking.
+
+2. **React Context Provider**: A custom context provider (`PostHogContext.tsx`) manages PostHog throughout your React application, making analytics functions available via hooks.
+
+## Key Tracking Features Enabled
+
+- **Page Views**: Automatically tracks when users visit pages
+- **Page Leave Events**: Properly captures when users exit pages (critical for accurate bounce rate and session duration)
+- **Local Storage Persistence**: User sessions are maintained consistently
+- **Autocapture**: Automatically tracks clicks, form submissions, and other interactions
+- **Custom Events**: Specific e-commerce events like product views and purchases
+
 ## Configuration
 
 ### Step 1: Get Your PostHog Credentials
@@ -34,7 +50,7 @@ PostHog is an open-source product analytics platform that helps you understand h
 
 The PostHog integration includes tracking for:
 
-- Automatic page views
+- Automatic page views and page leaves
 - Product views
 - Add to cart events
 - Wishlist additions
@@ -84,7 +100,7 @@ capturePurchase(
   'order-123456', 
   59.98,
   [
-    { id: 'product-1', name: 'Product 1', price: 29.99, quantity: a },
+    { id: 'product-1', name: 'Product 1', price: 29.99, quantity: 1 },
     { id: 'product-2', name: 'Product 2', price: 29.99, quantity: 1 }
   ]
 );
@@ -113,6 +129,14 @@ identify(userId, {
 4. Use "Funnels" to analyze conversion paths
 5. View "User Paths" to understand navigation patterns
 
+## Key Metrics Now Available
+
+With the proper implementation of page leave events, you can now accurately track:
+
+- **Bounce Rate**: The percentage of visitors who navigate away after viewing only one page
+- **Session Duration**: How long users spend on your site
+- **Engagement Metrics**: More accurate data on how users interact with your content
+
 ## Differences from Google Analytics
 
 While we've implemented both analytics systems, they each have different strengths:
@@ -122,6 +146,16 @@ While we've implemented both analytics systems, they each have different strengt
 
 Having both systems gives you comprehensive insights into both marketing performance and product usage.
 
+## Testing Analytics
+
+To test that PostHog is capturing events correctly:
+
+1. Visit your website in a browser
+2. Navigate between a few pages
+3. Add items to cart
+4. Check the PostHog dashboard - you should see events appearing in real-time
+5. Verify that both page views and page leave events are being recorded
+
 ## Disabling Analytics in Development
 
-In development mode, PostHog tracking is disabled by default. This prevents your development activities from skewing your analytics data. If you need to test analytics functionality locally, you can modify the `PostHogContext.tsx` file. 
+By default, analytics tracking is now enabled in both development and production. If you wish to disable tracking in development, you can modify the `PostHogContext.tsx` file to uncomment the `posthog.opt_out_capturing()` line in the development environment check. 
