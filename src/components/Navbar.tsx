@@ -57,9 +57,15 @@ const Navbar = () => {
             className="flex items-center"
           >
             <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-serif font-medium tracking-tight text-espresso">
+            <img 
+                src="/images/logo.jpeg" 
+                alt="Yarn Elegance Logo" 
+                className="h-16 w-auto mr-2"
+              />
+            <h1 className="text-2xl font-serif font-medium tracking-tight text-espresso">
                 Yarn<span className="font-light">Elegance</span>
               </h1>
+              
             </Link>
           </motion.div>
 

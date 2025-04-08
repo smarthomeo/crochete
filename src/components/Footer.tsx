@@ -104,9 +104,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
           <motion.div variants={itemVariants} className="space-y-6 md:col-span-1">
             <Link to="/" className="inline-block">
-              <h2 className="text-2xl font-serif font-medium tracking-tight text-espresso">
-                Yarn<span className="font-light">Elegance</span>
-              </h2>
+              <img 
+                src="/images/logo.jpeg" 
+                alt="Yarn Elegance Logo" 
+                className="h-20 w-auto mb-3"
+              />
+              
             </Link>
             <p className="text-sm text-taupe max-w-xs leading-relaxed">
               Handcrafted crochet pieces made with love and attention to detail.
